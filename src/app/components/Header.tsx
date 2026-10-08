@@ -1,15 +1,10 @@
+
 import Image from "next/image";
+import LiveDate from "./LiveDate";
+
 
 const Header = () => {
-  const today = new Date();
-
-  const date = today.toLocaleDateString("bn-BD", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-
+  
   return (
     <div className="flex justify-between container mx-auto mt-2">
       <div className="flex items-center gap-2">
@@ -22,7 +17,7 @@ const Header = () => {
 
         <div>
           <h2 className="font-bold text-[18px]">বাজার দর</h2>
-          <p className="font-semibold text-[#1D271F] text-[10px]">{date}</p>
+          <LiveDate/>
         </div>
       </div>
 
