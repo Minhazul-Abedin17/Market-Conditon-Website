@@ -12,7 +12,7 @@ const Navbar =async () => {
     const navs : NavItems[]= data
     console.log(navs)
     return (
-        <div className='flex gap-5 items-center justify-center mt-3'>
+        <div className='flex gap-5 items-center justify-center mt-3 mb-4'>
             {
                 navs.map((n,i) => <div key={i}>
                     <span>{n.icon}</span>
