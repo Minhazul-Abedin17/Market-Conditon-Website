@@ -1,6 +1,7 @@
 
 import Image from "next/image";
 import LiveDate from "./LiveDate";
+import Link from "next/link";
 
 
 const Header = () => {
@@ -22,13 +23,17 @@ const Header = () => {
       </div>
 
       <div className="flex items-center gap-2">
+        <Link href={"/signIn"}>
         <button className="btn border font-semibold rounded-2xl">
           সাইন ইন
         </button>
+        </Link>
 
+        <Link href={"/signUp"}>
         <button className="btn bg-[#05893E] text-white font-semibold rounded-2xl">
           সাইন আপ
         </button>
+        </Link>
       </div>
     </div>
   );

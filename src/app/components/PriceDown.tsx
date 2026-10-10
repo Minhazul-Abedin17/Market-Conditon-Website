@@ -15,7 +15,7 @@ interface Product {
 
 const PriceDown = async () => {
   const res = await fetch(
-    "https://api.api-store.workers.dev/api/bazardor/products",
+    "https://api.abcz.workers.dev/api/bazardor/products",
     {
       cache: "no-store",
     },
@@ -33,7 +33,7 @@ const PriceDown = async () => {
     .slice(0, 5);
   const bnNumber = (value: number) => value.toLocaleString("bn-BD");
   return (
-    <section className="container mx-auto rounded-3xl bg-[#f8f9f8] p-4 sm:p-6">
+    <section className="container mx-auto rounded-3xl bg-[#f8f9f8] p-4 sm:p-6  mt-5">
       {/* Section Header */}
       <div className="mb-6 flex items-center gap-2">
         <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-green-50 text-lg text-green-600">
