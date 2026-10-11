@@ -1,8 +1,8 @@
+import Link from "next/link";
 interface Product {
   id: number;
+  slug: string;
   nameBn: string;
-  category: string;
-  categoryNameBn: string;
   categoryIcon: string;
   today: number;
   yesterday: number;
@@ -12,76 +12,71 @@ interface Product {
     pct: number;
   };
 }
-
 const PriceUp = async () => {
   const res = await fetch(
-    "https://api.abcz.workers.dev/api/bazardor/products",
+    "https://openapi.programming-hero.com/api/bazardor/products",
     {
       cache: "no-store",
     },
   );
-
-  if (!res.ok) {
-    throw new Error("পণ্যের তথ্য লোড করা যায়নি");
-  }
   const data: Product[] = await res.json();
   const upPrice = data
-    .filter((item) => item.change?.dir === "up" && item.today > item.yesterday)
+    .filter((item) => item.change.dir === "up" && item.today > item.yesterday)
     .slice(0, 5);
-  const bnNumber = (value: number) => value.toLocaleString("bn-BD");
   return (
-    <section className="container mx-auto rounded-3xl bg-[#f8f9f8] p-4 sm:p-6 mt-5">
-      {/* Section Header */}
-      <div className="mb-6 flex items-center gap-2">
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-red-50 text-lg text-red-600">
+    <section className="container mx-auto mt-5 rounded-3xl bg-gray-50 p-4 sm:p-6">
+      <div className="mb-6 flex items-center gap-3">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-50 text-xl text-red-600">
           ↑
         </span>
-        <h3 className="text-xl font-bold text-gray-900">আজ দাম বেড়েছে</h3>
+        <div>
+          <h2 className="text-xl font-bold text-gray-900">আজ দাম বেড়েছে</h2>
+          <p className="mt-1 text-sm text-gray-500">যেসব পণ্যের দাম বেড়েছে</p>
+        </div>
       </div>
-      {/* Product Cards */}
-      {upPrice.length > 0 ? (
+      {upPrice.length === 0 ? (
+        <p className="rounded-xl bg-white p-5 text-center text-sm text-gray-500">
+          আজ দাম বেড়েছে এমন কোনো পণ্য পাওয়া যায়নি।
+        </p>
+      ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {upPrice.map((item) => (
-            <article
+            <Link
               key={item.id}
-              className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-md"
+              href={`/products/${item.slug}`}
+              className="block"
             >
-              {/* Product Name */}
-              <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green-50 text-2xl">
-                  {item.categoryIcon || "🛒"}
+              <div className="h-full rounded-2xl border border-gray-100 bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:border-red-100 hover:shadow-md">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-red-50 text-2xl">
+                    {item.categoryIcon || "🛒"}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-800">{item.nameBn}</h3>
+                    <p className="mt-1 text-xs text-gray-500">
+                      প্রতি {item.unit === "kg" ? "কেজি" : item.unit}
+                    </p>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <h4 className="font-bold text-gray-900">{item.nameBn}</h4>
-                  <p className="mt-1 text-xs text-gray-500">
-                    প্রতি {item.unit === "kg" ? "কেজি" : item.unit}
+                <div className="mt-4 border-t border-gray-100 pt-3">
+                  <p className="text-sm text-gray-500">আজকের দাম</p>
+                  <p className="mt-1 text-2xl font-bold text-gray-900">
+                    ৳{item.today.toLocaleString("bn-BD")}
+                  </p>
+                  <p className="mt-2 text-xs text-gray-500">
+                    গতকাল ৳{item.yesterday.toLocaleString("bn-BD")}
+                  </p>
+                  <span className="mt-3 inline-flex rounded-full bg-red-50 px-3 py-1.5 text-xs font-bold text-red-600">
+                    ↑ {item.change.pct.toLocaleString("bn-BD")}% দাম বেড়েছে
+                  </span>
+                  <p className="mt-4 border-t border-gray-100 pt-3 text-sm font-semibold text-green-700">
+                    বিস্তারিত দেখুন →
                   </p>
                 </div>
               </div>
-              {/* Price */}
-              <div className="mt-4 border-t border-gray-100 pt-3">
-                <p className="text-xs text-gray-500">আজকের দাম</p>
-                <p className="mt-1 text-2xl font-bold text-gray-900">
-                  ৳{bnNumber(item.today)}
-                </p>
-
-                <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-xs text-gray-500">
-                    গতকাল ৳{bnNumber(item.yesterday)}
-                  </span>
-
-                  <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-1 text-xs font-bold text-red-600">
-                    ↑ {bnNumber(item.change.pct)}%
-                  </span>
-                </div>
-              </div>
-            </article>
+            </Link>
           ))}
         </div>
-      ) : (
-        <p className="rounded-xl bg-white p-5 text-sm text-gray-500">
-          আজ দাম বেড়েছে এমন কোনো পণ্য পাওয়া যায়নি।
-        </p>
       )}
     </section>
   );

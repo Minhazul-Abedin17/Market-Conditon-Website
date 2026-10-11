@@ -17,87 +17,74 @@ interface IProduct {
 }
 
 const Marquee = async () => {
-  const res = await fetch(
-    "https://api.abcz.workers.dev/api/bazardor/products",
-    {
-      cache: "no-store",
+  let products: IProduct[] = [];
+
+  try {
+    const res = await fetch(
+      "https://openapi.programming-hero.com/api/bazardor/products",
+      {
+        next: { revalidate: 60 },
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch products");
     }
-  );
 
-  if (!res.ok) {
-    throw new Error("পণ্যের তথ্য লোড করা যায়নি");
+    products = await res.json();
+  } catch (error) {
+    console.error("Marquee API error:", error);
   }
-
-  const products: IProduct[] = await res.json();
-
-  // ইংরেজি সংখ্যা বাংলায় দেখাবে
-  const bnNumber = (value: number) =>
-    value.toLocaleString("bn-BD", {
-      maximumFractionDigits: 1,
-    });
 
   return (
     <div className="w-full overflow-hidden border-y border-gray-200 bg-white py-3 text-gray-900">
-      <div className="mx-auto flex w-full items-center">
-        <div className="w-full overflow-hidden">
-          <MarqueeText
-            className="py-1 text-sm sm:text-base"
-            direction="right"
-            duration={13}
+      <MarqueeText
+        className="py-1 text-sm sm:text-base"
+        direction="right"
+        duration={13}
+      >
+        {products.map((product) => (
+          <Link
+            key={product.id}
+            href={`/products/${product.slug}`}
+            className="mx-4 inline-flex items-center gap-2 whitespace-nowrap sm:mx-6"
           >
-            {products.map((product) => {
-              const isUp = product.change?.dir === "up";
-              const isDown = product.change?.dir === "down";
+            <span className="text-lg sm:text-xl">
+              {product.categoryIcon || "🛒"}
+            </span>
 
-              return (
-                <Link
-                  key={product.id}
-                  href={`/product/${product.slug}`}
-                  className="mx-4 inline-flex items-center gap-2 whitespace-nowrap sm:mx-6"
-                >
-                  {/* পণ্যের আইকন */}
-                  <span className="text-lg sm:text-xl">
-                    {product.categoryIcon || "🛒"}
-                  </span>
+            <span className="font-bold text-gray-800">
+              {product.nameBn}
+            </span>
 
-                  {/* পণ্যের নাম */}
-                  <span className="font-bold text-gray-800">
-                    {product.nameBn}
-                  </span>
+            <span className="font-semibold text-gray-700">
+              {product.today.toLocaleString("bn-BD")} টাকা/
+              {product.unit === "kg" ? "কেজি" : product.unit}
+            </span>
 
-                  {/* আজকের দাম */}
-                  <span className="font-semibold text-gray-700">
-                    {bnNumber(product.today)} টাকা/
-                    {product.unit === "kg" ? "কেজি" : product.unit}
-                  </span>
+            {product.change?.dir === "up" && (
+              <span className="font-bold text-red-600">
+                ▲ {product.change.pct.toLocaleString("bn-BD")}%
+              </span>
+            )}
 
-                  {/* দাম বাড়া বা কমা */}
-                  {isUp && (
-                    <span className="font-bold text-red-600">
-                      ▲ {bnNumber(product.change.pct)}%
-                    </span>
-                  )}
+            {product.change?.dir === "down" && (
+              <span className="font-bold text-green-600">
+                ▼ {product.change.pct.toLocaleString("bn-BD")}%
+              </span>
+            )}
 
-                  {isDown && (
-                    <span className="font-bold text-green-600">
-                      ▼ {bnNumber(product.change.pct)}%
-                    </span>
-                  )}
+            {product.change?.dir !== "up" &&
+              product.change?.dir !== "down" && (
+                <span className="font-semibold text-gray-500">
+                  অপরিবর্তিত
+                </span>
+              )}
 
-                  {!isUp && !isDown && (
-                    <span className="font-semibold text-gray-500">
-                      অপরিবর্তিত
-                    </span>
-                  )}
-
-                  {/* প্রতিটি পণ্যের মাঝে separator */}
-                  <span className="ml-2 text-gray-300">●</span>
-                </Link>
-              );
-            })}
-          </MarqueeText>
-        </div>
-      </div>
+            <span className="ml-2 text-gray-300">●</span>
+          </Link>
+        ))}
+      </MarqueeText>
     </div>
   );
 };

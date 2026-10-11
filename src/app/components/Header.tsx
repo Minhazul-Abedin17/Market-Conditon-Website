@@ -1,42 +1,27 @@
-
 import Image from "next/image";
 import LiveDate from "./LiveDate";
 import Link from "next/link";
-
-
+import UserInfo from "./UserInfo";
 const Header = () => {
-  
   return (
-    <div className="flex justify-between container mx-auto mt-2">
+    <header className="mx-auto mt-2 flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3">
       <div className="flex items-center gap-2">
-        <Image className="bg-green-600 border rounded-xl p-2"
+        <Image
+          className="rounded-xl border bg-green-600 p-2"
           src="/logo-icon.png"
           alt="Bazar Dor Logo"
           width={48}
           height={48}
         />
-
         <div>
-          <h2 className="font-bold text-[18px]">বাজার দর</h2>
-          <LiveDate/>
+          <h2 className="text-lg font-bold text-gray-900 sm:text-xl">
+            বাজার দর
+          </h2>
+          <LiveDate />
         </div>
       </div>
-
-      <div className="flex items-center gap-2">
-        <Link href={"/signIn"}>
-        <button className="btn border font-semibold rounded-2xl">
-          সাইন ইন
-        </button>
-        </Link>
-
-        <Link href={"/signUp"}>
-        <button className="btn bg-[#05893E] text-white font-semibold rounded-2xl">
-          সাইন আপ
-        </button>
-        </Link>
-      </div>
-    </div>
+      <UserInfo/>
+    </header>
   );
 };
-
 export default Header;

@@ -1,16 +1,26 @@
-'use client'
+
+"use client";
+
+import { useEffect, useState } from "react";
+
 const LiveDate = () => {
-  const date = new Date().toLocaleDateString("bn-BD", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  const [date, setDate] = useState("");
+
+  useEffect(() => {
+    setDate(
+      new Date().toLocaleDateString("bn-BD", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    );
+  }, []);
 
   return (
-    <div>
-      <p className="font-semibold text-[#1D271F] text-[10px]">{date}</p>
-    </div>
+    <p className="text-[10px] font-semibold text-[#1D271F] sm:text-xs">
+      {date || "\u00A0"}
+    </p>
   );
 };
 
