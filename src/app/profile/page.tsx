@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { FaSignOutAlt, FaUser } from "react-icons/fa";
@@ -10,30 +10,55 @@ const ProfilePage = () => {
   const { data: session } = authClient.useSession();
   const user = session?.user;
   const router = useRouter();
-  const [name, setName] = useState(user?.name || "");
-  const [image, setImage] = useState(user?.image || "");
+
+  const [name, setName] = useState("");
+  const [image, setImage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // সেশন লোড হলে ফর্মের মান সিঙ্ক করুন
+  useEffect(() => {
+    if (user) {
+      setName(user.name ?? "");
+      setImage(user.image ?? "");
+    }
+  }, [user]);
+
   const handleSignOut = async () => {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          router.push("/signIn");
+          router.push("/auth/sign-in");
         },
       },
     });
   };
+
   const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+
     try {
-      await authClient.updateUser({
-        name: name,
-        image: image,
+      const result = await authClient.updateUser({
+        name: name.trim(),
+        image: image.trim() || undefined,
       });
+
+      if (result?.error) {
+        toast.error("আপডেট করতে সমস্যা হয়েছে!");
+        return;
+      }
+
       toast.success("তথ্য হালনাগাদ হয়েছে");
     } catch (error) {
       console.error(error);
       toast.error("আপডেট করতে সমস্যা হয়েছে!");
+    } finally {
+      setLoading(false);
     }
   };
+
+  const previewImage = image || user?.image || "";
+
   return (
     <div className="min-h-screen bg-[#F2F5F3] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto space-y-6">
@@ -47,10 +72,10 @@ const ProfilePage = () => {
         <div className="bg-white rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4 w-full sm:w-auto">
             <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center shrink-0">
-              {image || user?.image ? (
+              {previewImage ? (
                 <img
-                  src={image || user?.image}
-                  alt={user?.name || "Profile"}
+                  src={previewImage}
+                  alt={user?.name ?? "Profile"}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -59,14 +84,13 @@ const ProfilePage = () => {
             </div>
             <div>
               <h2 className="text-lg font-bold text-gray-800">
-                {user?.name || "Rezwan Ahmed"}
+                {user?.name ?? ""}
               </h2>
-              <p className="text-sm text-gray-400">
-                {user?.email || "rezwanahmed@gmail.com"}
-              </p>
+              <p className="text-sm text-gray-400">{user?.email ?? ""}</p>
             </div>
           </div>
           <button
+            type="button"
             onClick={handleSignOut}
             className="flex items-center gap-2 border border-red-300 text-red-500 hover:bg-red-50 px-4 py-2 rounded-xl text-sm font-semibold transition-all w-full sm:w-auto justify-center"
           >
@@ -80,22 +104,32 @@ const ProfilePage = () => {
 
           <form onSubmit={handleUpdate} className="space-y-6">
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-2">
+              <label
+                htmlFor="name"
+                className="block text-xs font-semibold text-gray-600 mb-2"
+              >
                 নাম
               </label>
               <input
+                id="name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder={user?.name || "আপনার নাম লিখুন"}
+                placeholder="আপনার নাম লিখুন"
+                required
                 className="w-full px-4 py-3 bg-[#FAFBFB] border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm text-gray-800 transition"
               />
             </div>
+
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-2">
+              <label
+                htmlFor="image"
+                className="block text-xs font-semibold text-gray-600 mb-2"
+              >
                 ছবি URL (Image URL)
               </label>
               <input
+                id="image"
                 type="url"
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
@@ -106,9 +140,10 @@ const ProfilePage = () => {
 
             <button
               type="submit"
-              className="w-full bg-[#05893E] hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition-all shadow-sm text-sm"
+              disabled={loading}
+              className="w-full bg-[#05893E] hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition-all shadow-sm text-sm disabled:cursor-not-allowed disabled:opacity-60"
             >
-              আপডেট
+              {loading ? "আপডেট হচ্ছে..." : "আপডেট"}
             </button>
           </form>
         </div>
