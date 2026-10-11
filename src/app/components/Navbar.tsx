@@ -1,6 +1,9 @@
+
 "use client";
+
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import ProductList from "./ProductList";
+
 interface NavItems {
   id: string;
   slug?: string;
@@ -13,26 +16,23 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("chal");
 
   useEffect(() => {
-    fetch("https://openapi.programming-hero.com/api/bazardor/categories", {
-      cache: "no-store",
-    })
+    fetch("https://openapi.programming-hero.com/api/bazardor/categories")
       .then((res) => res.json())
-      .then((data) => setNavs(data));
+      .then((data) => setNavs(data))
+      .catch((error) => console.log("ক্যাটাগরি লোড করতে সমস্যা:", error));
   }, []);
 
-  const selectedItem = navs.find(
-    (item) => (item.slug || item.id) === selectedCategory,
-  );
-
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className=" bg-gray-50">
       <div className="bg-white shadow-sm">
         <div className="mx-auto flex max-w-6xl gap-3 overflow-x-auto px-4 py-4">
           {navs.map((item) => {
             const categorySlug = item.slug || item.id;
+
             return (
-              <button
+              <Link
                 key={item.id}
+                href={`/item/${categorySlug}`}
                 onClick={() => setSelectedCategory(categorySlug)}
                 className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-sm font-bold ${
                   selectedCategory === categorySlug
@@ -42,7 +42,7 @@ export default function Home() {
               >
                 <span>{item.icon}</span>
                 <span>{item.nameBn}</span>
-              </button>
+              </Link>
             );
           })}
         </div>

@@ -1,11 +1,12 @@
 import Image from "next/image";
 import LiveDate from "./LiveDate";
 import UserInfo from "./UserInfo";
+import Link from "next/link";
 const Header = () => {
   return (
     <header className="mx-auto mt-2 flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3">
-      <div className="flex items-center gap-2">
-        <Image
+      <Link href={'/'} className="flex items-center gap-2">
+      <Image
           className="rounded-xl border bg-green-600 p-2"
           src="/logo-icon.png"
           alt="Bazar Dor Logo"
@@ -18,7 +19,7 @@ const Header = () => {
           </h2>
           <LiveDate />
         </div>
-      </div>
+      </Link>
       <UserInfo/>
     </header>
   );

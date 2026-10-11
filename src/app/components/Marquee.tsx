@@ -37,7 +37,7 @@ const Marquee = async () => {
 
   return (
     <div className="w-full overflow-hidden border-y border-gray-200 bg-white py-3 text-gray-900">
-      <MarqueeText
+      <MarqueeText 
         className="py-1 text-sm sm:text-base"
         direction="right"
         duration={10}
