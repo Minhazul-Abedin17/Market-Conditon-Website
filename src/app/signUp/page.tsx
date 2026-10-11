@@ -4,27 +4,36 @@ import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
+import toast from "react-hot-toast";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
 const SignUpPage = () => {
-    const onSubmit =async(e : React.SubmitEvent<HTMLElement>)=>{
-        e.preventDefault()
-        const formData= new FormData(e.target);
-        const user = Object.fromEntries(formData.entries()) as {
-            name : string,
-            email : string,
-            password : string
-        }
-        const {data , error} =await authClient.signUp.email({...user})
-        if(data){
-            console.log("toast dekaite hobe.",data)
-            redirect("/")
-        }
-        if(error){
-            console.log("error toast")
-        }
+  const onSubmit = async (e: React.SubmitEvent<HTMLElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const user = Object.fromEntries(formData.entries()) as {
+      name: string;
+      email: string;
+      password: string;
+    };
+    const { data, error } = await authClient.signUp.email({ ...user });
+
+    if (data) {
+      toast.success("আপনার অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!", {
+        icon: "✅",
+        duration: 3000,
+      });
+      redirect("/");
     }
+
+    if (error) {
+      toast.error("সাইন আপ করা যায়নি। আবার চেষ্টা করুন!", {
+        icon: "⚠️",
+        duration: 3000,
+      });
+    }
+  };
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-[#f3f4f6] px-4 py-10 sm:px-6">
       <div className="w-full max-w-md">
@@ -48,7 +57,8 @@ const SignUpPage = () => {
               <label className="mb-2 block text-sm font-semibold text-gray-700">
                 নাম
               </label>
-              <input name="name"
+              <input
+                name="name"
                 type="text"
                 required
                 placeholder="যেমন: রহিম উদ্দিন"
@@ -60,7 +70,8 @@ const SignUpPage = () => {
               <label className="mb-2 block text-sm font-semibold text-gray-700">
                 ইমেইল
               </label>
-              <input name="email"
+              <input
+                name="email"
                 type="email"
                 required
                 placeholder="you@example.com"
@@ -72,7 +83,8 @@ const SignUpPage = () => {
               <label className="mb-2 block text-sm font-semibold text-gray-700">
                 পাসওয়ার্ড
               </label>
-              <input name="password"
+              <input
+                name="password"
                 type="password"
                 required
                 minLength={8}
@@ -85,7 +97,8 @@ const SignUpPage = () => {
               <label className="mb-2 block text-sm font-semibold text-gray-700">
                 পাসওয়ার্ড নিশ্চিত করুন
               </label>
-              <input name="confirmPassword"
+              <input
+                name="confirmPassword"
                 type="password"
                 required
                 minLength={8}

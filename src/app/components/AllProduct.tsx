@@ -54,15 +54,11 @@ const AllProduct = async () => {
               সব পণ্য
             </h2>
 
-            <p className="mt-1 text-sm text-gray-500">
-              নিত্যপ্রয়োজনীয় পণ্যের আজকের দাম
+            <p className="mt-1 text-[12px] font-semibold text-gray-500">
+              মোট {formatPrice(data.length)}টি পণ্য দেখানো হচ্ছে
             </p>
           </div>
         </div>
-
-        <span className="w-fit rounded-full bg-white px-3 py-2 text-sm font-semibold text-gray-600">
-          মোট {formatPrice(data.length)}টি পণ্য
-        </span>
       </div>
 
       {data.length === 0 ? (

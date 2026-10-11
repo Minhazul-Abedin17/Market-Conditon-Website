@@ -1,7 +1,35 @@
 "use client";
+import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
+import toast from "react-hot-toast";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+
+const onSubmit = async (e: React.SubmitEvent<HTMLElement>) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const user = Object.fromEntries(formData.entries()) as {
+    email: string;
+    password: string;
+  };
+  const { data, error } = await authClient.signIn.email({
+    ...user,
+    callbackURL: "/",
+  });
+  if (data) {
+    toast.success("সফলভাবে সাইন ইন হয়েছে!", {
+      icon: "✅",
+      duration: 3000,
+    });
+  }
+  if (error) {
+    toast.error("কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।", {
+      icon: "⚠️",
+      duration: 3000,
+    });
+  }
+};
+
 const SignInPage = () => {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-[#f3f4f6] px-4 py-10 sm:px-6">
@@ -11,9 +39,7 @@ const SignInPage = () => {
             🛒
           </div>
 
-          <h1 className="text-2xl font-extrabold text-gray-900">
-            সাইন ইন
-          </h1>
+          <h1 className="text-2xl font-extrabold text-gray-900">সাইন ইন</h1>
 
           <p className="mt-2 text-sm leading-6 text-gray-600">
             বিস্তারিত দাম, বাজার তুলনা ও প্রোফাইল দেখতে অ্যাকাউন্টে ঢুকুন।
@@ -21,16 +47,14 @@ const SignInPage = () => {
         </div>
 
         <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-8">
-          <form
-            className="space-y-5"
-            onSubmit={(e) => e.preventDefault()}
-          >
+          <form className="space-y-5" onSubmit={onSubmit}>
             <div>
               <label className="mb-2 block text-sm font-semibold text-gray-700">
                 ইমেইল
               </label>
 
-              <input name="email"
+              <input
+                name="email"
                 type="email"
                 required
                 placeholder="you@example.com"
@@ -43,7 +67,8 @@ const SignInPage = () => {
                 পাসওয়ার্ড
               </label>
 
-              <input name="password"
+              <input
+                name="password"
                 type="password"
                 required
                 placeholder="আপনার পাসওয়ার্ড লিখুন"
