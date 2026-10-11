@@ -1,11 +1,7 @@
-
 "use client";
-
 import { useEffect, useState } from "react";
-
 const LiveDate = () => {
   const [date, setDate] = useState("");
-
   useEffect(() => {
     setDate(
       new Date().toLocaleDateString("bn-BD", {

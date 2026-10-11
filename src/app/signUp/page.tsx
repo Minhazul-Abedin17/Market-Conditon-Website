@@ -1,6 +1,5 @@
 "use client";
 import { authClient } from "@/lib/auth-client";
-
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -39,6 +38,12 @@ const SignUpPage = () => {
       provider: "google",
     });
   };
+  const handleGitHubSignUp = async () => {
+    await authClient.signIn.social({
+      provider: "github",
+    });
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-[#f3f4f6] px-4 py-10 sm:px-6">
       <div className="w-full max-w-md">
@@ -133,19 +138,16 @@ const SignUpPage = () => {
               className="flex w-full min-w-0 items-center justify-center gap-3 rounded-xl border border-gray-200 px-5 py-3 text-sm font-bold text-gray-700 transition hover:bg-gray-50"
             >
               <FcGoogle className="shrink-0 text-xl" />
-              <span className="font-semibold">
-                Google দিয়ে চালিয়ে যান
-              </span>
+              <span className="font-semibold">Google দিয়ে চালিয়ে যান</span>
             </button>
 
             <button
               type="button"
+              onClick={handleGitHubSignUp}
               className="flex w-full min-w-0 items-center justify-center gap-3 rounded-xl border border-gray-200 px-5 py-3 text-sm font-bold text-gray-700 transition hover:bg-gray-50"
             >
               <FaGithub className="shrink-0 text-xl" />
-              <span className="font-semibold">
-                GitHub দিয়ে চালিয়ে যান
-              </span>
+              <span className="font-semibold">GitHub দিয়ে চালিয়ে যান</span>
             </button>
           </div>
 

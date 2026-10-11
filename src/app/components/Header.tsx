@@ -1,6 +1,5 @@
 import Image from "next/image";
 import LiveDate from "./LiveDate";
-import Link from "next/link";
 import UserInfo from "./UserInfo";
 const Header = () => {
   return (

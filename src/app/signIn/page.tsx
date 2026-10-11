@@ -34,6 +34,11 @@ const handleGoogleSignIn = async () => {
     provider: "google",
   });
 };
+const handleGitHubSignIn = async () => {
+    await authClient.signIn.social({
+        provider: "github"
+    })
+}
 
 const SignInPage = () => {
   return (
@@ -107,7 +112,7 @@ const SignInPage = () => {
             </button>
 
             <button
-              type="button"
+              type="button" onClick={handleGitHubSignIn}
               className="flex w-full min-w-0 items-center justify-center gap-3 rounded-xl border border-gray-200 px-5 py-3 text-sm font-bold text-gray-700 transition hover:bg-gray-50"
             >
               <FaGithub className="shrink-0 text-xl" />
