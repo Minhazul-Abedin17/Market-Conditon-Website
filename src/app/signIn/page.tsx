@@ -29,6 +29,11 @@ const onSubmit = async (e: React.SubmitEvent<HTMLElement>) => {
     });
   }
 };
+const handleGoogleSignIn = async () => {
+  await authClient.signIn.social({
+    provider: "google",
+  });
+};
 
 const SignInPage = () => {
   return (
@@ -91,12 +96,12 @@ const SignInPage = () => {
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <button
+            <button onClick={handleGoogleSignIn}
               type="button"
               className="flex w-full min-w-0 items-center justify-center gap-3 rounded-xl border border-gray-200 px-5 py-3 text-sm font-bold text-gray-700 transition hover:bg-gray-50"
             >
               <FcGoogle className="shrink-0 text-xl" />
-              <span className="whitespace-nowrap font-bold">
+              <span className="font-semibold">
                 Google দিয়ে চালিয়ে যান
               </span>
             </button>
@@ -106,7 +111,7 @@ const SignInPage = () => {
               className="flex w-full min-w-0 items-center justify-center gap-3 rounded-xl border border-gray-200 px-5 py-3 text-sm font-bold text-gray-700 transition hover:bg-gray-50"
             >
               <FaGithub className="shrink-0 text-xl" />
-              <span className="whitespace-nowrap font-bold">
+              <span className="font-semibold">
                 GitHub দিয়ে চালিয়ে যান
               </span>
             </button>

@@ -34,6 +34,11 @@ const SignUpPage = () => {
       });
     }
   };
+  const handleGoogleSignUp = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+    });
+  };
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-[#f3f4f6] px-4 py-10 sm:px-6">
       <div className="w-full max-w-md">
@@ -123,11 +128,12 @@ const SignUpPage = () => {
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <button
+              onClick={handleGoogleSignUp}
               type="button"
               className="flex w-full min-w-0 items-center justify-center gap-3 rounded-xl border border-gray-200 px-5 py-3 text-sm font-bold text-gray-700 transition hover:bg-gray-50"
             >
               <FcGoogle className="shrink-0 text-xl" />
-              <span className="whitespace-nowrap font-bold">
+              <span className="font-semibold">
                 Google দিয়ে চালিয়ে যান
               </span>
             </button>
@@ -137,7 +143,7 @@ const SignUpPage = () => {
               className="flex w-full min-w-0 items-center justify-center gap-3 rounded-xl border border-gray-200 px-5 py-3 text-sm font-bold text-gray-700 transition hover:bg-gray-50"
             >
               <FaGithub className="shrink-0 text-xl" />
-              <span className="whitespace-nowrap font-bold">
+              <span className="font-semibold">
                 GitHub দিয়ে চালিয়ে যান
               </span>
             </button>

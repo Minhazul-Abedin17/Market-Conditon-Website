@@ -41,7 +41,7 @@ const Marquee = async () => {
       <MarqueeText
         className="py-1 text-sm sm:text-base"
         direction="right"
-        duration={13}
+        duration={10}
       >
         {products.map((product) => (
           <Link
